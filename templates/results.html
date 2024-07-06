@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Job Results</h1>
+    
+    <form method="GET" action="{{ url_for('show_vacancies') }}">
+        <label for="salary_from">Salary From:</label>
+        <input type="number" id="salary_from" name="salary_from">
+        
+        <label for="salary_to">Salary To:</label>
+        <input type="number" id="salary_to" name="salary_to">
+        
+        <label for="region">Region:</label>
+        <input type="text" id="region" name="region">
+        
+        <label for="experience">Experience:</label>
+        <input type="text" id="experience" name="experience">
+        
+        <label for="keyword">Job Title:</label>
+        <input type="text" id="keyword" name="keyword">
+
+        <label for="currency">Currency:</label>
+        <input type="text" id="currency" name="currency">
+        
+        <button type="submit">Filter</button>
+    </form>
+
+    {% if vacancies %}
+    <p>Found {{ vacancies|length }} vacancies</p>
+    <ul>
+        {% for vacancy in vacancies %}
+        <li>
+            <strong>Name:</strong> {{ vacancy[0] }}<br>
+            <strong>Company:</strong> {{ vacancy[1] }}<br>
+            <strong>Salary From:</strong> {{ vacancy[2] }}<br>
+            <strong>Salary To:</strong> {{ vacancy[3] }}<br>
+            <strong>Currency:</strong> {{ vacancy[4] }}<br>
+            <strong>Region:</strong> {{ vacancy[6] }}<br>
+            <strong>Experience:</strong> {{ vacancy[7] }}<br>
+            <strong>Employment:</strong> {{ vacancy[8] }}<br>
+            <strong>Link:</strong> <a href="{{ vacancy[5] }}" target="_blank">View</a><br>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="pagination">
+        {% if page > 1 %}
+        <a href="{{ url_for('show_vacancies', page=page-1, salary_from=request.args.get('salary_from'), salary_to=request.args.get('salary_to'), region=request.args.get('region'), experience=request.args.get('experience'), keyword=request.args.get('keyword'), currency=request.args.get('currency')) }}">Previous</a>
+        {% endif %}
+        <span>Page {{ page }} of {{ total_pages }}</span>
+        {% if page < total_pages %}
+        <a href="{{ url_for('show_vacancies', page=page+1, salary_from=request.args.get('salary_from'), salary_to=request.args.get('salary_to'), region=request.args.get('region'), experience=request.args.get('experience'), keyword=request.args.get('keyword'), currency=request.args.get('currency')) }}">Next</a>
+        {% endif %}
+    </div>
+    {% else %}
+    <p>No vacancies found.</p>
+    {% endif %}
+</body>
+</html>
